@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protein Calculator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-bg: #222222;
+            --text-main: #E0E0E0;
+            --accent: #FFB300; /* 工業黃 */
+            --border-color: #444444;
+        }
+        body {
+            font-family: 'Courier New', Consolas, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px dashed var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 900px;
+            width: 100%;
+        }
+        .card {
+            background: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 5px 5px 0px var(--border-color); /* 硬派陰影 */
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            border-left: 5px solid var(--accent);
+            padding-left: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #AAAAAA;
+        }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            background: #111111;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        /* 隱藏數字輸入框的上下箭頭 */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: 0.1s;
+        }
+        button:hover {
+            background: #e6a200;
+        }
+        button:active {
+            transform: translateY(3px); /* 點擊下壓回饋 */
+            box-shadow: none;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #111111;
+            border: 1px dashed var(--accent);
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: var(--accent);
+            min-height: 28px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Protein Calculator</h1>
+
+    <div class="container">
+        <div class="card">
+            <h2>100g計算</h2>
+            <div class="input-group">
+                <label>一包總重量 (g)</label>
+                <input type="number" id="weight1" placeholder="輸入總克數">
+            </div>
+            <div class="input-group">
+                <label>總價格 (元)</label>
+                <input type="number" id="price1" placeholder="輸入價格">
+            </div>
+            <div class="input-group">
+                <label>每百克含蛋白質 (g)</label>
+                <input type="number" id="protein100" placeholder="例如: 80">
+            </div>
+            <button onclick="calc100g()">計算 CP 值</button>
+            <div class="result" id="result1">--</div>
+        </div>
+
+        <div class="card">
+            <h2>每份計算</h2>
+            <div class="input-group">
+                <label>一包總重量 (g)</label>
+                <input type="number" id="weight2" placeholder="輸入總克數">
+            </div>
+            <div class="input-group">
+                <label>總價格 (元)</label>
+                <input type="number" id="price2" placeholder="輸入價格">
+            </div>
+            <div class="input-group">
+                <label>每份重量 (g)</label>
+                <input type="number" id="servingSize" placeholder="例如: 35">
+            </div>
+            <div class="input-group">
+                <label>每份含蛋白質 (g)</label>
+                <input type="number" id="proteinPerServing" placeholder="例如: 26.8">
+            </div>
+            <button onclick="calcServing()">計算 CP 值</button>
+            <div class="result" id="result2">--</div>
+        </div>
+    </div>
+
+    <script>
+        function calc100g() {
+            const w = parseFloat(document.getElementById('weight1').value);
+            const p = parseFloat(document.getElementById('price1').value);
+            const p100 = parseFloat(document.getElementById('protein100').value);
+
+            if (!w || !p || !p100) {
+                document.getElementById('result1').innerHTML = '資料不齊全';
+                return;
+            }
+
+            // 總蛋白質 = (總重量 / 100) * 每百克蛋白質
+            const totalProtein = (w / 100) * p100;
+            // 每 100g 蛋白質價格 = (總價 / 總蛋白質) * 100
+            const pricePer100gProtein = (p / totalProtein) * 100;
+            
+            document.getElementById('result1').innerHTML = `$${pricePer100gProtein.toFixed(1)} / 100g 蛋白`;
+        }
+
+        function calcServing() {
+            const w = parseFloat(document.getElementById('weight2').value);
+            const p = parseFloat(document.getElementById('price2').value);
+            const s = parseFloat(document.getElementById('servingSize').value);
+            const ps = parseFloat(document.getElementById('proteinPerServing').value);
+
+            if (!w || !p || !s || !ps) {
+                document.getElementById('result2').innerHTML = '資料不齊全';
+                return;
+            }
+
+            // 總份數 = 總重量 / 每份重量
+            const totalServings = w / s;
+            // 總蛋白質 = 總份數 * 每份蛋白質
+            const totalProtein = totalServings * ps;
+            // 每 100g 蛋白質價格 = (總價 / 總蛋白質) * 100
+            const pricePer100gProtein = (p / totalProtein) * 100;
+            
+            document.getElementById('result2').innerHTML = `$${pricePer100gProtein.toFixed(1)} / 100g 蛋白`;
+        }
+    </script>
+</body>
+</html>
