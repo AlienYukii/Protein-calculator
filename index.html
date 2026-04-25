@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA 硬派工具箱 - 健身與投資</title>
+    <title> Lomamy-tools </title>
     <style>
         :root {
             --bg-color: #121212;
@@ -177,7 +177,7 @@
         </div>
 
         <div class="card">
-            <h2>BTC 合約風險壓測</h2>
+            <h2>BTC 合約風險報酬計算 </h2>
             <div class="input-group">
                 <label>方向</label>
                 <select id="cryptoPos">
@@ -205,28 +205,6 @@
             <div class="result-box" id="resultCrypto">--</div>
         </div>
 
-        <div class="card">
-            <h2>資金費率耗損測試</h2>
-            <div class="input-group">
-                <label>名目本金 (本金 x 槓桿)</label>
-                <input type="number" id="totalPosition" placeholder="例如: 5000">
-            </div>
-            <div class="input-group">
-                <label>單期費率 (%)</label>
-                <input type="number" id="fundRate" step="0.001" placeholder="例如: 0.01">
-            </div>
-            <div class="input-group">
-                <label>每日結算次數 (通常為 3)</label>
-                <input type="number" id="settleCount" value="3">
-            </div>
-            <div class="input-group">
-                <label>持有天數</label>
-                <input type="number" id="holdDays" placeholder="例如: 30">
-            </div>
-            <button onclick="calcFunding()">計算持倉成本</button>
-            <div class="result-box" id="resultFunding">--</div>
-        </div>
-    </div>
 
     <script>
         // 蛋白 CP 值計算 logic
@@ -271,25 +249,6 @@
                 <span>爆倉價: <b class="danger">${liqPrice.toFixed(2)}</b></span>
                 <span>目標獲利: <b class="${profit >= 0 ? 'success' : 'danger'}">${profit.toFixed(2)} USDT</b></span>
                 <span>預估 ROE: <b class="${roe >= 0 ? 'success' : 'danger'}">${roe.toFixed(2)}%</b></span>
-            `;
-        }
-
-        // 資金費率 logic
-        function calcFunding() {
-            const totalPos = parseFloat(document.getElementById('totalPosition').value);
-            const rate = parseFloat(document.getElementById('fundRate').value) / 100;
-            const count = parseFloat(document.getElementById('settleCount').value);
-            const days = parseFloat(document.getElementById('holdDays').value);
-
-            if (!totalPos || isNaN(rate) || !count || !days) return document.getElementById('resultFunding').innerHTML = '輸入異常';
-
-            const dailyCost = totalPos * rate * count;
-            const totalCost = dailyCost * days;
-
-            document.getElementById('resultFunding').innerHTML = `
-                <span>每日費用: <b>${dailyCost.toFixed(2)} USDT</b></span>
-                <span>總持倉成本: <b class="danger">${totalCost.toFixed(2)} USDT</b></span>
-                <span>(佔總部位 ${(totalCost/totalPos*100).toFixed(3)}%)</span>
             `;
         }
     </script>
