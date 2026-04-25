@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protein Calculator</title>
+    <title>QA 硬派工具箱 - 健身與投資</title>
     <style>
         :root {
             --bg-color: #121212;
@@ -11,6 +11,8 @@
             --text-main: #E0E0E0;
             --accent: #FFB300; /* 工業黃 */
             --border-color: #444444;
+            --danger: #ff4444;
+            --success: #00c853;
         }
         body {
             font-family: 'Courier New', Consolas, monospace;
@@ -36,7 +38,7 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            max-width: 900px;
+            max-width: 1200px;
             width: 100%;
         }
         .card {
@@ -47,6 +49,8 @@
             width: 100%;
             max-width: 350px;
             box-shadow: 5px 5px 0px var(--border-color); /* 硬派陰影 */
+            display: flex;
+            flex-direction: column;
         }
         .card h2 {
             margin-top: 0;
@@ -54,17 +58,18 @@
             color: var(--text-main);
             border-left: 5px solid var(--accent);
             padding-left: 10px;
+            margin-bottom: 20px;
         }
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         label {
             display: block;
             margin-bottom: 5px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #AAAAAA;
         }
-        input {
+        input, select {
             width: 100%;
             box-sizing: border-box;
             padding: 10px;
@@ -74,7 +79,7 @@
             font-family: inherit;
             font-size: 1rem;
         }
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--accent);
         }
@@ -95,38 +100,46 @@
             font-size: 1.1rem;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: auto;
             transition: 0.1s;
         }
         button:hover {
             background: #e6a200;
         }
         button:active {
-            transform: translateY(3px); /* 點擊下壓回饋 */
+            transform: translateY(3px);
             box-shadow: none;
         }
-        .result {
+        .result-box {
             margin-top: 20px;
-            padding: 15px;
+            padding: 12px;
             background: #111111;
             border: 1px dashed var(--accent);
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            color: var(--accent);
-            min-height: 28px;
+            font-size: 0.95rem;
+            color: var(--text-main);
         }
+        .result-box span {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .danger { color: var(--danger); }
+        .success { color: var(--success); }
     </style>
 </head>
 <body>
 
-    <h1>Protein Calculator</h1>
+    <h1>QA HARDCORE TOOLBOX</h1>
 
     <div class="container">
         <div class="card">
-            <h2>100g計算</h2>
+            <h2>蛋白 CP 值 (100g)</h2>
             <div class="input-group">
-                <label>一包總重量 (g)</label>
+                <label>總重量 (g)</label>
                 <input type="number" id="weight1" placeholder="輸入總克數">
             </div>
             <div class="input-group">
@@ -138,13 +151,13 @@
                 <input type="number" id="protein100" placeholder="例如: 80">
             </div>
             <button onclick="calc100g()">計算 CP 值</button>
-            <div class="result" id="result1">--</div>
+            <div class="result-box" id="result1">--</div>
         </div>
 
         <div class="card">
-            <h2>每份計算</h2>
+            <h2>蛋白 CP 值 (每份)</h2>
             <div class="input-group">
-                <label>一包總重量 (g)</label>
+                <label>總重量 (g)</label>
                 <input type="number" id="weight2" placeholder="輸入總克數">
             </div>
             <div class="input-group">
@@ -160,27 +173,71 @@
                 <input type="number" id="proteinPerServing" placeholder="例如: 26.8">
             </div>
             <button onclick="calcServing()">計算 CP 值</button>
-            <div class="result" id="result2">--</div>
+            <div class="result-box" id="result2">--</div>
+        </div>
+
+        <div class="card">
+            <h2>BTC 合約風險壓測</h2>
+            <div class="input-group">
+                <label>方向</label>
+                <select id="cryptoPos">
+                    <option value="long">做多 (Long)</option>
+                    <option value="short">做空 (Short)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>進場價格 (USDT)</label>
+                <input type="number" id="entryPrice" placeholder="例如: 78000">
+            </div>
+            <div class="input-group">
+                <label>槓桿倍數 (X)</label>
+                <input type="number" id="leverage" placeholder="例如: 5">
+            </div>
+            <div class="input-group">
+                <label>本金 (USDT)</label>
+                <input type="number" id="marginAmount" placeholder="例如: 1000">
+            </div>
+            <div class="input-group">
+                <label>目標價 (USDT)</label>
+                <input type="number" id="targetPrice" placeholder="例如: 100000">
+            </div>
+            <button onclick="calcCrypto()">執行風險測試</button>
+            <div class="result-box" id="resultCrypto">--</div>
+        </div>
+
+        <div class="card">
+            <h2>資金費率耗損測試</h2>
+            <div class="input-group">
+                <label>名目本金 (本金 x 槓桿)</label>
+                <input type="number" id="totalPosition" placeholder="例如: 5000">
+            </div>
+            <div class="input-group">
+                <label>單期費率 (%)</label>
+                <input type="number" id="fundRate" step="0.001" placeholder="例如: 0.01">
+            </div>
+            <div class="input-group">
+                <label>每日結算次數 (通常為 3)</label>
+                <input type="number" id="settleCount" value="3">
+            </div>
+            <div class="input-group">
+                <label>持有天數</label>
+                <input type="number" id="holdDays" placeholder="例如: 30">
+            </div>
+            <button onclick="calcFunding()">計算持倉成本</button>
+            <div class="result-box" id="resultFunding">--</div>
         </div>
     </div>
 
     <script>
+        // 蛋白 CP 值計算 logic
         function calc100g() {
             const w = parseFloat(document.getElementById('weight1').value);
             const p = parseFloat(document.getElementById('price1').value);
             const p100 = parseFloat(document.getElementById('protein100').value);
-
-            if (!w || !p || !p100) {
-                document.getElementById('result1').innerHTML = '資料不齊全';
-                return;
-            }
-
-            // 總蛋白質 = (總重量 / 100) * 每百克蛋白質
-            const totalProtein = (w / 100) * p100;
-            // 每 100g 蛋白質價格 = (總價 / 總蛋白質) * 100
-            const pricePer100gProtein = (p / totalProtein) * 100;
-            
-            document.getElementById('result1').innerHTML = `$${pricePer100gProtein.toFixed(1)} / 100g 蛋白`;
+            if (!w || !p || !p100) return document.getElementById('result1').innerHTML = '資料不齊全';
+            const totalP = (w / 100) * p100;
+            const pricePer100 = (p / totalP) * 100;
+            document.getElementById('result1').innerHTML = `<span>每 100g 蛋白成本:</span><span class="highlight">$${pricePer100.toFixed(1)}</span>`;
         }
 
         function calcServing() {
@@ -188,20 +245,52 @@
             const p = parseFloat(document.getElementById('price2').value);
             const s = parseFloat(document.getElementById('servingSize').value);
             const ps = parseFloat(document.getElementById('proteinPerServing').value);
+            if (!w || !p || !s || !ps) return document.getElementById('result2').innerHTML = '資料不齊全';
+            const totalP = (w / s) * ps;
+            const pricePer100 = (p / totalP) * 100;
+            document.getElementById('result2').innerHTML = `<span>每 100g 蛋白成本:</span><span class="highlight">$${pricePer100.toFixed(1)}</span>`;
+        }
 
-            if (!w || !p || !s || !ps) {
-                document.getElementById('result2').innerHTML = '資料不齊全';
-                return;
-            }
+        // BTC 合約 logic
+        function calcCrypto() {
+            const pos = document.getElementById('cryptoPos').value;
+            const entry = parseFloat(document.getElementById('entryPrice').value);
+            const lev = parseFloat(document.getElementById('leverage').value);
+            const margin = parseFloat(document.getElementById('marginAmount').value);
+            const target = parseFloat(document.getElementById('targetPrice').value);
 
-            // 總份數 = 總重量 / 每份重量
-            const totalServings = w / s;
-            // 總蛋白質 = 總份數 * 每份蛋白質
-            const totalProtein = totalServings * ps;
-            // 每 100g 蛋白質價格 = (總價 / 總蛋白質) * 100
-            const pricePer100gProtein = (p / totalProtein) * 100;
-            
-            document.getElementById('result2').innerHTML = `$${pricePer100gProtein.toFixed(1)} / 100g 蛋白`;
+            if (!entry || !lev || !margin || !target) return document.getElementById('resultCrypto').innerHTML = '輸入異常';
+
+            let liqPrice = (pos === 'long') ? entry * (1 - (1 / lev)) : entry * (1 + (1 / lev));
+            let profit = (pos === 'long') 
+                ? margin * lev * ((target - entry) / entry)
+                : margin * lev * ((entry - target) / entry);
+            let roe = (profit / margin) * 100;
+
+            document.getElementById('resultCrypto').innerHTML = `
+                <span>爆倉價: <b class="danger">${liqPrice.toFixed(2)}</b></span>
+                <span>目標獲利: <b class="${profit >= 0 ? 'success' : 'danger'}">${profit.toFixed(2)} USDT</b></span>
+                <span>預估 ROE: <b class="${roe >= 0 ? 'success' : 'danger'}">${roe.toFixed(2)}%</b></span>
+            `;
+        }
+
+        // 資金費率 logic
+        function calcFunding() {
+            const totalPos = parseFloat(document.getElementById('totalPosition').value);
+            const rate = parseFloat(document.getElementById('fundRate').value) / 100;
+            const count = parseFloat(document.getElementById('settleCount').value);
+            const days = parseFloat(document.getElementById('holdDays').value);
+
+            if (!totalPos || isNaN(rate) || !count || !days) return document.getElementById('resultFunding').innerHTML = '輸入異常';
+
+            const dailyCost = totalPos * rate * count;
+            const totalCost = dailyCost * days;
+
+            document.getElementById('resultFunding').innerHTML = `
+                <span>每日費用: <b>${dailyCost.toFixed(2)} USDT</b></span>
+                <span>總持倉成本: <b class="danger">${totalCost.toFixed(2)} USDT</b></span>
+                <span>(佔總部位 ${(totalCost/totalPos*100).toFixed(3)}%)</span>
+            `;
         }
     </script>
 </body>
