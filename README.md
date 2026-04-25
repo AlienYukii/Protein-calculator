@@ -1,1 +1,1 @@
-# Protein-calculator
+# Personal-calculator
